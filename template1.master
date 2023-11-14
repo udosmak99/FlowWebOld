@@ -1,0 +1,439 @@
+﻿<%@ Master Language="VB" CodeFile="template1.master.vb" Inherits="template1" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<asp:contentplaceholder id="parameterHeader" runat="server" /> 
+<%       
+    ''---(NameMenu,icons,links,width)---//
+    '    Dim mMenu(,) As Object = { _
+    '{"จุดติดตั้งทั้งหมด", "map_icon.png", "Default.aspx", 190}, _
+    '{"ข้อมูลทุกสถานีเวลาปัจจุบัน", "station_icon.png", "all_stations.aspx", 280}, _
+    '{"แผนผังทิศทางการไหลของน้ำ", "plan_icon.png", "plan_direction.aspx", 280}, _
+    '{"ข้อมูลย้อนหลัง", "report_icon.png", "report.aspx", 190} _
+    '}
+
+    '    Session("mMenu") = mMenu
+
+    '    '---(image,waterStatus)---//
+
+    '    Dim wStatus(,) As Object = { _
+    '    {"normal", "สถานการณ์น้ำปกติ"}, _
+    '    {"warning", "สถานการณ์น้ำเฝ้าระวัง"}, _
+    '    {"urgent", "สถานการณ์น้ำวิกฤติ"} _
+    '    }
+
+    '    Session("wStatus") = wStatus
+
+    '    Dim wZone(,) As Object = { _
+    '    {"กลุ่มสถานีการระบายน้ำของฝั่งกรุงเทพฯ"}, _
+    '    {"กลุ่มสถานีการระบายน้ำของฝั่งธนบุรี"}, _
+    '    {"กลุ่มสถานีการระบายน้ำอื่นๆ"} _
+    '    }
+
+    '    Session("wZone") = wZone
+
+    ''---(image,connectStatus)---//
+    'Dim cStatus(,) As Object = { _
+    '{"c-false.png", "สถานะระบบขัดข้อง"}, _
+    '{"c-normal.png", "สถานะระบบปกติ"} _
+    '}
+
+    'Session("cStatus") = cStatus
+
+    '--(NameStaion,Description,waterStatus,marginTop,connection)----//
+    'Dim wStation(,) As Object = { _
+    '{"ปตร. คลองขุนศรีบุรีรักษ์", "", 1, 75, 1, "13.8024", "100.37059", 3}, _
+    '{"ปตร. คลองควาย", "", 2, 75, 1, "13.80199", "100.38202", 1}, _
+    '{"ปตร. คลองซอย", "", 3, 75, 1, "13.802424", "100.348517", 1}, _
+    '{"ปตร. คลองทวีวัฒนา", "", 1, 75, 1, "13.799959", "100.329685", 2}, _
+    '{"ปตร. คลองบึงขวาง", "", 1, 75, 1, "13.79964", "100.74357", 1}, _
+    '{"ปตร. คลองประเวศบุรีรมย์ ตอนลาดกระบัง", "", 1, 75, 1, "13.72402", "100.73816", 1}, _
+    '{"ปตร. คลองพระยาสุเรนทร์ ตอนหกวาสายล่าง", "", 1, 75, 1, "13.92166", "100.68731", 1}, _
+    '{"ปตร. คลองลำหม้อแตก", "", 1, 75, 0, "13.921297", "100.662003", 3}, _
+    '{"ปตร. คลองสองตะวันตก", "", 2, 75, 1, "13.86387", "100.72273", 2}, _
+    '{"ปตร. คลองสองสายใต้", "", 2, 75, 0, "13.922188", "100.634285", 2}, _
+    '{"ปตร. คลองสามตะวันตก", "", 2, 75, 1, "13.87929", "100.72238", 1}, _
+    '{"ปตร. คลองสามวา", "", 3, 75, 0, "13.85953", "100.72916", 1}, _
+    '{"ปตร. คลองสี่ตะวันตก", "", 3, 75, 1, "13.89556", "100.72204", 1}, _
+    '{"ปตร. คลองหนึ่ง", "", 1, 75, 0, "13.85044", "100.73243", 1}, _
+    '{"ส. แสนแสบ-หนองจอก", "", 1, 75, 1, "13.82095", "100.746916", 1}, _
+    '{"ส. คลองขุนราชพินิจใจ", "", 2, 75, 1, "13.57199", "100.44561", 3}, _
+    '{"ส. คลองบางเขนใหม่ ตอนแม่น้ำเจ้าพระยา", "", 1, 75, 1, "13.817871", "100.510968", 1}, _
+    '{"ส. คลองบางซื่อ ตอนแม่น้ำเจ้าพระยา", "", 1, 75, 0, "13.800211", "100.519477", 1}, _
+    '{"ส. คลองพระยาราชมนตรี", "", 1, 75, 0, "13.63208", "100.43825", 1}, _
+    '{"ส. คลองสามเสน ตอนแม่น้ำเจ้าพระยา", "", 1, 75, 0, "13.784075", "100.508835", 1}, _
+    '{"จุดวัดคลองพระโขนง ตอนวัดขจรศิริ", "", 1, 75, 1, "13.715226", "100.640768", 1}, _
+    '{"ปตร. ซอยลาดพร้าว 56", "", 1, 75, 0, "13.793697", "100.58942", 1}, _
+    '{"จุดวัดคลองบางกอกน้อย", "", 1, 75, 0, "13.762604", "100.47879", 2}, _
+    '{"จุดวัดคลองพระโขนงบริเวณวัดสะพาน", "", 1, 75, 1, "13.705288", "100.588551", 1}, _
+    '{"แม่น้ำเจ้าพระยาบริเวณสะพานพระราม 8", "", 1, 75, 1, "13.768841", "100.497265", 1}, _
+    '{"ปตร. คลองแสนแสบ ตอนคลองตัน", "", 1, 75, 1, "13.741287", "100.596407", 1}, _
+    '{"แม่น้ำเจ้าพระยาบริเวณปากคลองตลาด", "", 1, 75, 1, "13.766947", "100.494542", 1}, _
+    '{"ส. สูบน้ำพระโขนง", "", 1, 75, 1, "13.709457", "100.596684", 1} _
+    '}
+    'Session("wStation") = wStation
+
+    ''---(cystalImage, )---//
+
+    'Dim cReport(,) As Object = { _
+    '{"data_sample.jpg", "sample_graph1.jpg"}, _
+    '{"data_sample.jpg", "sample_graph2.jpg"}, _
+    '{"data_sample.jpg", "sample_graph3.jpg"}, _
+    '{"data_sample.jpg", "sample_graph4.jpg"}, _
+    '{"data_sample.jpg", "sample_graph5.jpg"} _
+    '}
+    'Session("cReport") = cReport
+
+    ''---(cystalGraph, )---//
+
+    'Dim graphData(,) As Object = { _
+    '{"อัตราการไหล", "sample_graph2.jpg"}, _
+    '{"ระดับน้ำ", "sample_graph3.jpg"}, _
+    '{"ความเร็วกระแสน้ำ", "sample_graph1.jpg"}, _
+    '{"พื้นที่หน้าตัด", "sample_graph4.jpg"}, _
+    '{"ปริมาณน้ำ", "sample_graph5.jpg"} _
+    '}
+    'Session("graphData") = graphData
+
+
+
+    ''---(txt,xx)---//
+    'Dim typeData(,) As Object = { _
+    '{"รายงานข้อมูลรายสถานีย้อนหลัง", ""}, _
+    '{"รายงานความเร็วกระแสน้ำรายสถานีประจำเดือน", ""}, _
+    '{"รายงานความเร็วกระแสน้ำรายสถานีประจำปี", ""}, _
+    '{"รายงานปริมาณน้ำรายสถานีประจำเดือน", ""}, _
+    '{"รายงานปริมาณน้ำรายสถานีประจำปี", ""}, _
+    '{"รายงานระดับน้ำรายสถานีประจำเดือน", ""}, _
+    '{"รายงานระดับน้ำรายสถานีประจำปี", ""}, _
+    '{"รายงานสรุปข้อมูลเครื่องวัดอัตราการไหลของน้ำตามความเวลาที่เลือก", ""}, _
+    '{"รายงานสรุปข้อมูลเครื่องวัดอัตราการไหลของน้ำประจำเดือน", ""}, _
+    '{"รายงานสรุปข้อมูลเครื่องวัดอัตราการไหลของน้ำประจำเดือนแบบละเอียด", ""}, _
+    '{"รายงานสรุปข้อมูลเครื่องวัดอัตราการไหลของน้ำประจำเดือนแบบละเอียด", ""}, _
+    '{"รายงานสรุปข้อมูลเครื่องวัดอัตราการไหลของน้ำประจำปีแบบละเอียด", ""}, _
+    '{"รายงานอัตราการไหลรายสถานีประจำเดือน", ""}, _
+    '{"รายงานอัตราการไหลรายสถานีรายปี", ""} _
+    '}
+    'Session("typeData") = typeData
+
+    ''---(txt,xx)---//
+    'Dim printData(,) As Object = { _
+    '{"พิมพ์ทั้งข้อมูลและกราฟ", ""}, _
+    '{"พิมพ์เฉพาะข้อมูล", ""}, _
+    '{"พิมพ์เฉพาะกราฟ", ""} _
+    '}
+    'Session("printData") = printData
+
+    ''---(percent)---//
+    'Dim zoomData(,) As Object = { _
+    '{50, ""}, _
+    '{75, ""}, _
+    '{100, ""}, _
+    '{150, ""}, _
+    '{200, ""}, _
+    '{300, ""}, _
+    '{400, ""} _
+    '}
+    'Session("zoomData") = zoomData
+
+%>
+ 
+ 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<%
+    Dim mMenu(,) As Object = Session("mMenu")
+    %>
+<title>สำนักการระบายน้ำ : ระบบตรวจวัดอัตราการไหลของน้ำ : <% Response.Write(CStr(mMenu(Application("stationMenu")-1,0)) ) %></title>
+<asp:contentplaceholder id="metaPlaceHeader" runat="server" /> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="css/reset.css" rel="stylesheet" type="text/css"/>
+<link href="css/contents.css" rel="stylesheet" type="text/css"/>
+<asp:contentplaceholder id="cssPlaceHeader" runat="server" /> 
+<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.session.js"></script>
+<script type="text/javascript" src="js/global.js"></script>
+<asp:contentplaceholder id="jsPlaceHeader" runat="server" /> 
+<script type="text/javascript">
+
+    var arrMenu = new Array("not use", "", "", "");
+    var curLevel = 0;
+    var maxLevel = 3;
+    var mousex;
+    var mousey;
+    function falsefunc() { return false; }
+
+    var dayString = new Array();
+    dayString[0] = "อาทิตย์"; dayString[1] = "จันทร์"; dayString[2] = "อังคาร";
+    dayString[3] = "พุทธ"; dayString[4] = "พฤหัสบดี"; dayString[5] = "ศุกร์";
+    dayString[6] = "เสาร์"; 
+
+    var monthString = new Array();
+    monthString[0] = "ม.ค."; monthString[1] = "ก.พ."; monthString[2] = "ม.ค.";
+    monthString[3] = "ม.ย."; monthString[4] = "พ.ค."; monthString[5] = "มิ.ย.";
+    monthString[6] = "ก.ค."; monthString[7] = "ส.ค."; monthString[8] = "ก.ย.";
+    monthString[9] = "ต.ค."; monthString[10] = "พ.ย."; monthString[11] = "ธ.ค.";
+
+    function convert(input) {
+        var output = "0" + input;
+        return (output.substring(output.length - 2, output.length));
+    }
+
+    function now() {
+        dt = new Date();
+        year = dt.getFullYear() + 543;
+        dateday = dt.getDay();
+        month = dt.getMonth();
+        date = dt.getDate();
+        hour = dt.getHours();
+        minute = dt.getMinutes();
+        second = dt.getSeconds();
+        today = "วัน" + dayString[dateday] + "ที่ " + date + " " + monthString[month] + " " + (year) + " เวลา " + convert(hour) + "." + convert(minute) + " น.";
+        var tpanel = document.getElementById('dPanel');
+        if (tpanel != null) {
+            tpanel.innerHTML = today;
+            setTimeout("now()", 1000);
+        }
+
+    }
+
+
+    function openAtFile(id) {
+        //alert('openfile id = ' + id); 
+        var namepage = './pageDataContent.aspx?ID=' + id;
+        window.open(namepage, "AlarmAttach");
+    }
+      
+      
+</script>
+</head>
+<body  onload="now()">
+  
+<center id="header" class="header">
+
+<!--- Header All--->
+<div style="width:1000px;background:url(images/bg_header.png) top center  repeat-x;text-align:left;padding-top:115px;height:15px; ">
+
+<!---Header inside--->
+
+<div  style="margin:0px 0 0 9px; position:
+absolute;z-index:99;background:url(images/bg_date.png) repeat-x ;">
+
+
+<!---วันเวลา ปัจจุบัน--->
+<div style="padding:20px 0 0 15px; width:300px;position:absolute;">
+<img src="images/calendar_icon.png" align="absmiddle" hspace="5"/>
+<span id="dPanel" style="font-size:11px;"></span>
+</div>
+<!---end วันเวลา ปัจจุบัน--->
+
+
+ <div style="height:55px;width:985px;background:url(images/bg_menu.png) top right  no-repeat; z-index:567;">
+ <!---main_menu--->
+ <div style="padding:0px 0px 0 320px;">
+ <table cellspacing="0" cellpading="0" width="665" >
+ <tr>
+ <%
+ 
+For row As Integer = 0 to UBound(Session("mMenu"))
+   Dim mName as String = CStr(Session("mMenu")(row,0))
+   Dim mIcon as String = CStr(Session("mMenu")(row,1))
+   Dim mLink as String = CStr(Session("mMenu")(row,2))
+   Dim mWidth as Integer = CInt(Session("mMenu")(row,3))
+
+%>
+<td align="center" class="<% 
+If Application("stationMenu")=row+1 Then 
+Response.Write("m-active") 
+End If 
+%>" width="<% Response.Write(mWidth)%>">
+<%  If (row = 3) Then%>
+<span class="flow_menu"  style="display:none;">
+ <a href="<% Response.Write(mLink)%>" ><img src="images/<% Response.Write(mIcon)%>" align="absmiddle"hspace="5"/><span><% Response.Write(mName)%></span></a>
+ </span>
+<% Else%>
+<span class="flow_menu">
+ <a href="<% Response.Write(mLink)%>" ><img src="images/<% Response.Write(mIcon)%>" align="absmiddle"hspace="5"/><span><% Response.Write(mName)%></span></a>
+ </span>
+<% End If %>
+ 
+ </td>
+<%
+If row < Session("mMenu").GetUpperBound(0) - 1 Then
+%>
+ <td width="2">
+ <img src="images/section_menu.png" align="absmiddle" />
+ </td>
+<%
+End If
+Next
+%>
+
+</tr>
+</table>
+</div>
+<!---end main_menu--->
+
+<!---status All--->
+<div style="margin:0px 0 0 0px;width:983px;background:url(images/fade_top.png) top center  repeat-x; height:65px; ">
+<% If Application("stationMenu")=1 or Application("stationMenu")=3 Then %>
+<!---status station head--->
+<div style="margin:0px 0 0 0px;position:absolute;">
+<asp:contentplaceholder id="contentPlaceHeadStation" runat="server" /> 
+</div>
+<div style="margin:0px 0 0 0px;position:absolute;z-index:996;">
+<asp:contentplaceholder id="contentPlaceMaps" runat="server" /> 
+</div>
+<!---end station head--->
+
+<!---status level--->
+<asp:contentplaceholder id="contentPlaceStatus" runat="server" /> 
+
+<!---end status level--->
+<!---menu hidden--->
+<div style="position:absolute;x-index:977;margin:0px 0 0 0px;width:985px;background:url(images/bg_list_head.png) top right  no-repeat; height:55px; text-align:right; padding-top:0px;">
+<span class="flow_menu" id="img_menu">
+<asp:contentplaceholder id="contentPlaceImgMenu" runat="server" /> 
+</div>
+</div>
+<!---end menu hidden--->
+<!---menu float--->
+<% Else If Application("stationMenu")=2 Then %>
+<asp:contentplaceholder id="contentPlaceMenu2" runat="server" /> 
+<% Else If Application("stationMenu")=3 Then %>
+<asp:contentplaceholder id="contentPlaceMenu3" runat="server" /> 
+<% Else If Application("stationMenu")=4 Then %>
+<asp:contentplaceholder id="contentPlaceMenu4" runat="server" /> 
+<% End If %>
+<!---End menu float--->
+</div>
+<!---End status All--->
+</div>
+<!---End Header inside--->
+</div>
+<!---End Header All--->
+</center>
+<center>
+<div class="bg_content">
+<%  
+ 	If Application("stationMenu")=1  Then
+%>
+<!--menu ด้านขวา มีเฉพาะหน้าแรก และหน้ารายละเอียดสถานี-->
+<div class="right_menu" id="right_menu" style="position:absolute;z-index:57;">
+<div class="right_m">
+<!--ภาพสถานี-->
+<div  id="img_station"  class="img_station"  style="padding:0px 10px 0px 30px;">
+<asp:contentplaceholder id="contentPlaceImg" runat="server" /> 
+</div>
+<!-- end ภาพสถานี-->
+<!--รายละเอียดสถานี-->
+<asp:contentplaceholder id="contentPlaceImgDesc" runat="server" />
+<!--end รายละเอียดสถานี-->
+<!-- รายชื่อสถานี-->
+<div style="border-top:1px solid #CCC; margin-left:9px;"></div>
+<div id="list_station" class="list_station" >
+<div style="padding:10px 20px 20px 10px;">
+
+<%
+    Dim wStation As Object = Session("wStation")
+For row As Integer = 0 to wStation.GetUpperBound(0)
+   Dim name as String = CStr(wStation(row,0))
+   Dim Desc as String = CStr(wStation(row,1))
+   Dim level as Integer = CInt(wStation(row,2))
+%>
+<div id="sub_<%Response.Write(row) %>" class="list_m<% 
+If row Mod 2 = 1 Then
+Response.Write("2")
+End If
+%> status<% Response.Write(level)%> bullet<% 
+If row=Request.QueryString("station")-1 Then
+Response.Write("2 list_m3")
+Else
+Response.Write("1")
+End If
+%>">
+<ul>
+<li><a href="stations.aspx?station=<% Response.Write(row+1)%>&stnid=<% Response.Write(Session("wStation")(row,10).ToString)%>" onclick="get_position();"><span><% Response.Write(name) %></span></a></li>
+</ul>
+</div>
+<%
+Next
+%>
+
+</div>
+</div>
+<div class="below_line">
+<%
+    Dim wStatus(,) As Object = Session("wStatus")
+For row As Integer = 0 to wStatus.GetUpperBound(0)
+   Dim statusIcon as String = CStr(wStatus(row,0))
+   Dim statusName as String = CStr(wStatus(row,1))
+   
+%>
+<div><img src="images/<% Response.Write(statusIcon)%>.gif" align="absmiddle"/> : <% Response.Write(statusName)%></div>
+<%
+Next
+%>
+</div>
+<div class="below_line">
+<%
+    Dim cStatus(,) As Object = Session("cStatus")
+For row As Integer = 0 to cStatus.GetUpperBound(0)
+   Dim cName as String = CStr(cStatus(row,0))
+   Dim cDesc as String = CStr(cStatus(row,1))
+    
+%>
+<div style="padding:5px 0 5px 50px;"><img src="images/<% Response.Write(cName)%>" align="absmiddle"/> : <% Response.Write(cDesc)%></div>
+<%
+Next
+%>
+</div>
+</div> 
+<!--end รายชื่อสถานี-->
+<!--แถบล่าง menu ด้านขวา-->
+<div class="list_menu_below"></div>
+<!--แถบล่าง menu ด้านขวา-->
+</div> 
+<!--end menu ด้านขวา-->
+<%
+   End If
+%>
+
+<!--Contents-->
+<div id="contents" style="padding:15px 8px 0 9px;background:url(images/bg_content.png) top center  repeat-y; ">
+<asp:contentplaceholder id="contentPlaceHolder" runat="server" /> 
+</div>
+<!--end Contents-->
+
+
+<!--Footers-->
+
+<div class="footer_detail">
+<div class="footer2">
+<span  class="flow_menu" >
+<a href="javascript:goToTop(110);"><img src="images/go2top2.png" hspace="5" align="absmiddle"/><span>ขึ้นด้านบน</span></a>
+</span>
+</div>
+</div>
+<div style="height:55px;width:1000px;background:url(images/bg_footer.png) top center no-repeat;text-align:left;">
+<div class="copy" style="padding:15px 0 0 35px;">
+<div style=" position:absolute;padding:0px 35px 0 0px;">
+<span>ลิขสิทธิ์ &copy; 2012   กองสารสนเทศสำนักการระบายน้ำ : Department of Drainage And Sewerage</span></div>
+<div style=" position:absolute; padding:0px 35px 0 0px; text-align:right;width:930px;">
+<span class="copy">ที่มา : กองสารสนเทศระบายน้ำ</span>
+</div>
+</div>
+</div>
+</center>
+<!--end Footers-->
+
+</body> 
+</html>
+<script>
+    if ($.session.get("body_pos") != "undefined" || $.session.get("list_pos") != "undefined") {
+        $('html,body').scrollTop($.session.get("body_pos"));
+        $('#list_station').scrollTop($.session.get("list_pos"));
+
+    }
+</script>
